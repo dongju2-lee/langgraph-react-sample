@@ -47,18 +47,6 @@ MCP_SERVERS = {
     },
 }
 
-# 가용 리소스 정보
-RESOURCES = {
-    "grafana_dashboards": ["cpu-usage-dashboard", "memory-usage-dashboard", "pod-count-dashboard"],
-    "grafana_datasources": ["prometheus", "loki", "tempo"],
-    "argocd_applications": ["user-service", "restaurant-service", "order-service", "payment-service", "delivery-service", "notification-service"],
-    "github_prs": [
-        {"id": 101, "title": "사용자 인증 기능 개선"},
-        {"id": 102, "title": "주문 서비스 성능 최적화"},
-        {"id": 103, "title": "레스토랑 검색 API 추가"}
-    ]
-}
-
 # MCP 클라이언트 초기화 함수
 async def init_mcp_client():
     """MCP 클라이언트를 초기화합니다."""
@@ -185,7 +173,7 @@ async def get_llm():
 # 프롬프트 생성 함수
 async def generate_prompt(user_request: str) -> str:
     """사용자 요청에 따른 프롬프트를 생성합니다."""
-    # MCP 서버에 연결 시도 중 오류가 발생할 경우를 대비하여 예외 처리
+    # 도구 정보 가져오기 시도
     try:
         # 도구 정보 가져오기 (MCP 서버에서 동적으로)
         tools_info = await convert_mcp_tools_to_info()
@@ -202,12 +190,6 @@ async def generate_prompt(user_request: str) -> str:
     except Exception as e:
         print(f"도구 정보 가져오기 중 오류 발생: {str(e)}")
         tools_text = "도구 정보를 가져오는 중 오류가 발생했습니다. MCP 서버 연결을 확인하세요."
-    
-    # 리소스 정보 포맷팅
-    grafana_dashboards = ", ".join(RESOURCES["grafana_dashboards"])
-    grafana_datasources = ", ".join(RESOURCES["grafana_datasources"])
-    argocd_applications = ", ".join(RESOURCES["argocd_applications"])
-    github_prs = ", ".join([f"#{pr['id']} ({pr['title']})" for pr in RESOURCES["github_prs"]])
     
     # 프롬프트 템플릿
     prompt_template = """당신은 유능한 데브옵스 엔지니어입니다. 사용자의 요청에 따라 작업을 어떻게 처리할지 계획을 세우는 역할을 합니다.
@@ -227,25 +209,13 @@ async def generate_prompt(user_request: str) -> str:
 사용 가능한 도구 목록:
 {tools}
 
-사용 가능한 리소스:
-- Grafana 대시보드: {grafana_dashboards}
-- Grafana 데이터소스: {grafana_datasources}
-- ArgoCD 애플리케이션: {argocd_applications}
-- GitHub 풀 리퀘스트: {github_prs}
-
 사용자의 요청을 신중하게 분석하고, 각 작업을 수행하기 위해 필요한 도구와 순서를 명확하게 설명해주세요.
 도구 이름과 필요한 파라미터를 정확히 지정해주세요.
 한국어로 응답해주세요.
 """
     
     # 프롬프트 완성
-    prompt = prompt_template.format(
-        tools=tools_text,
-        grafana_dashboards=grafana_dashboards,
-        grafana_datasources=grafana_datasources,
-        argocd_applications=argocd_applications,
-        github_prs=github_prs
-    )
+    prompt = prompt_template.format(tools=tools_text)
     
     return f"{prompt}\n\n사용자: \"{user_request}\"\n\n대응 계획:"
 
@@ -368,12 +338,12 @@ async def main_async():
     
     try:
         if mode == "1":
-            # 예제 쿼리 목록
+            # 예제 쿼리 목록 
             example_queries = [
                 "현재 시스템 상태를 확인해줘",
                 "오더 서비스를 배포하고 상태를 확인해줘",
                 "주문 서비스에 대해 가상 사용자 50명으로 30초 동안 성능 테스트를 실행하고 결과를 분석해줘",
-                "GitHub PR 목록을 보여주고 첫 번째 PR을 승인해줘",
+                "GitHub PR 목록을 보여주고 PR #101을 승인해줘",
                 "오더서비스 성능테스트하고 배포해, 그리고 그라파나에서 성능추이좀 알려줘"
             ]
             
