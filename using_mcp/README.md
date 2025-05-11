@@ -16,8 +16,6 @@ using_mcp/
 ├── generate_scenario_using_mcp_server.py         # 하드코딩된 도구 정보 사용 버전
 ├── generate_scenario_using_mcp_server_get_tool.py # 동적 도구 정보 사용 버전
 ├── react_using_mcp.py        # ReAct 패턴 구현 버전
-├── mcp_client_react.py       # OpenAI 기반 ReAct 패턴 MCP 클라이언트
-├── mcp_client_gemini.py      # Vertex AI Gemini 기반 ReAct 패턴 MCP 클라이언트
 └── README.md                 # 프로젝트 설명
 ```
 
@@ -144,12 +142,6 @@ python generate_scenario_using_mcp_server_get_tool.py
 # ReAct 패턴 버전 실행
 python react_using_mcp.py
 
-# OpenAI 기반 MCP 클라이언트 실행
-python mcp_client_react.py
-
-# 또는 Google Vertex AI Gemini 기반 MCP 클라이언트 실행
-python mcp_client_gemini.py
-
 # 모든 MCP 서버 종료
 cd mcp
 ./stop_servers.sh
@@ -165,28 +157,6 @@ cd mcp
 4. "order-service를 배포하고 배포 상태를 확인해줘"
 5. "user-service에 대해 50명의 가상 사용자로 30초 동안 성능 테스트를 실행해줘"
 6. "GitHub PR 목록을 보여주고 첫 번째 PR을 승인해줘"
-
-## 구현 모델 비교
-
-### OpenAI 기반 에이전트 (mcp_client_react.py)
-- OpenAI의 GPT-4o 모델 사용
-- 복잡한 작업을 단계별로 처리하는 ReAct 패턴 구현
-- 상태 관리를 위한 AgentState 클래스 및 워크플로우 그래프 구현
-
-### Google Vertex AI 기반 에이전트 (mcp_client_gemini.py)
-- Google Vertex AI의 Gemini 2.0 Flash 모델 사용
-- LangGraph의 create_react_agent 함수를 통한 ReAct 패턴 구현
-- 간결한 코드로 DevOps 작업 자동화
-
-## 확장 방법
-
-1. 새로운 도구 추가하기:
-   - `mcp` 디렉토리에 새로운 MCP 서버 파일 생성
-   - 도구 함수 구현 및 MCP 서버에 등록
-   - `mcp_client_gemini.py` 또는 `mcp_client_react.py`의 도구 목록 업데이트
-
-2. 에이전트 프롬프트 수정하기:
-   - `mcp_client_gemini.py`의 `PROMPT` 변수 또는 `mcp_client_react.py`의 프롬프트 변수 수정
 
 ## 기술적 과제 및 해결책
 
