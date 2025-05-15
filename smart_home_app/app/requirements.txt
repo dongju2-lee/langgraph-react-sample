@@ -1,5 +1,7 @@
-langchain
-langgraph
-langchain-mcp-adapters
-langchain-google-vertexai
+langgraph==0.4.0
+langchain==0.3.0
 python-dotenv
+loguru
+langchain-google-vertexai
+langchain-mcp-adapters
+langfuse

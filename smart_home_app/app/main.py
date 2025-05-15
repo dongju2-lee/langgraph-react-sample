@@ -1,30 +1,59 @@
+from graph.main_graph import build_main_graph
+from utils.session import create_session
+from utils.logging import get_logger
 import asyncio
-from workflow.plan_execute_graph import get_workflow
 from langchain_core.messages import HumanMessage
+from langfuse.callback import CallbackHandler
+
+langfuse_handler = CallbackHandler(
+    public_key="",
+    secret_key="",
+    host=""
+)
 
 async def main():
-    workflow = get_workflow()
-    print("스마트홈 쿠킹 에이전트에 오신 것을 환영합니다!")
-    state = None
+    session_id = create_session()
+    logger = get_logger(session_id)
+
+    # 그래프 빌드 및 컴파일
+    graph = build_main_graph()
+    graph = graph.compile()
+
+    # 상태 초기화 (messages, system_mode 등만 사용)
+    state = {
+        "messages": [],
+        "system_mode": "normal",
+        "recipe": None,
+        "current_step": None
+    }
+
+    print("스마트홈 시스템에 오신 것을 환영합니다. '종료'를 입력하면 대화가 끝납니다.")
+
     while True:
-        if state is None:
-            user_input = input("👤 사용자: ")
-            if user_input.strip().lower() in ["exit", "quit"]:
-                break
-            state = {
-                "input": user_input,
-                "messages": [HumanMessage(content=user_input)]
-            }
-        result = await workflow.ainvoke(state)
-        for step, msg in result.get("past_steps", []):
-            print(f"📝 {step}\n🤖 {msg}")
-        if result.get("response"):
-            print("✅", result["response"])
-            state = None  # 플로우 종료 후 초기화
+        user_input = input("\n사용자: ")
+        if user_input.strip().lower() in ["종료", "quit", "exit"]:
+            print("대화를 종료합니다. 감사합니다.")
+            break
+
+        # 입력 메시지를 messages에 추가
+        state["messages"].append(HumanMessage(content=user_input))
+        result = await graph.ainvoke(input=state, config={"callbacks": [langfuse_handler]})
+        logger.info(f"결과: {result}")
+
+        # 마지막 content가 비어있지 않은 메시지 찾기
+        if "messages" in result and result["messages"]:
+            for msg in reversed(result["messages"]):
+                if hasattr(msg, "content") and msg.content.strip():
+                    print("=" * 50)
+                    print(f"시스템: {msg.content}")
+                    print("=" * 50)
+                    # 대화 이력에 AI 응답도 추가
+                    state["messages"].append(msg)
+                    break
+            else:
+                print("시스템: (응답이 없습니다.)")
         else:
-            # 사용자 입력 대기 (예: 대체재, 진행 여부 등)
-            user_input = input("👤 사용자(추가 답변): ")
-            state["messages"].append(HumanMessage(content=user_input))
+            print("시스템: (응답이 없습니다.)")
 
 if __name__ == "__main__":
     asyncio.run(main())
