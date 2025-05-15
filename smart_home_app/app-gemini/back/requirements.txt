@@ -1,0 +1,8 @@
+langgraph
+langchain
+fastapi
+uvicorn[standard]
+pydantic
+python-dotenv
+httpx
+# langchain-mcp-adapters # 나중에 실제 라이브러리가 있다면 추가합니다. 
