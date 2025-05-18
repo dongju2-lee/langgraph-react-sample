@@ -52,6 +52,22 @@ MCP_SERVERS = {
         "url": os.environ.get("PERSONALIZATION_MCP_URL", "http://localhost:10006/sse"),
         "transport": "sse",
     },
+    "tv": {
+        "url": os.environ.get("TV_MCP_URL", "http://localhost:10007/sse"),
+        "transport": "sse",
+    },
+    "audio": {
+        "url": os.environ.get("AUDIO_MCP_URL", "http://localhost:10008/sse"),
+        "transport": "sse",
+    },
+    "light": {
+        "url": os.environ.get("LIGHT_MCP_URL", "http://localhost:10009/sse"),
+        "transport": "sse",
+    },
+    "curtain": {
+        "url": os.environ.get("CURTAIN_MCP_URL", "http://localhost:10010/sse"),
+        "transport": "sse",
+    },
 }
 
 # MCP 클라이언트 초기화 함수
