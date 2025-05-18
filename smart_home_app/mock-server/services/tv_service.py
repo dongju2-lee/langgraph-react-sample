@@ -3,6 +3,7 @@ from models.tv_models import (
     TVResultResponse, TVChannel, TVChannelsResponse
 )
 from logging_config import setup_logger
+from typing import Dict, Any
 
 logger = setup_logger("tv_service")
 
@@ -50,17 +51,74 @@ TV_CHANNELS = [
     )
 ]
 
+# TV 상태 저장용 전역 변수
+tv_state = {
+    "power_state": "off",  # "on" 또는 "off"
+    "current_channel": "MBB",  # 기본 채널
+    "volume": 10,  # 기본 볼륨 (0-100)
+}
+
 class TVService:
+    def get_status(self) -> Dict[str, Any]:
+        """
+        TV 상태 정보 조회
+        """
+        logger.info("TV 상태 조회")
+        
+        # 현재 채널에 대한 상세 정보 찾기
+        current_channel_info = next(
+            (channel for channel in TV_CHANNELS if channel.name == tv_state["current_channel"]),
+            None
+        )
+        
+        return {
+            "power": tv_state["power_state"] == "on",
+            "current_channel": tv_state["current_channel"],
+            "volume": tv_state["volume"],
+            "message": f"TV는 현재 {tv_state['power_state']} 상태이며, " + (
+                f"채널은 {tv_state['current_channel']}, 볼륨은 {tv_state['volume']}입니다." 
+                if tv_state["power_state"] == "on" else "전원이 꺼져 있습니다."
+            ),
+            "channel_info": current_channel_info.dict() if current_channel_info and tv_state["power_state"] == "on" else None
+        }
+        
     def set_power(self, req: TVPowerRequest) -> TVResultResponse:
         logger.info(f"TV 전원 제어: {req.power_state}")
+        # 상태 업데이트
+        tv_state["power_state"] = req.power_state
         return TVResultResponse(result="success", message=f"TV 전원이 {req.power_state} 상태로 변경됨")
 
     def set_channel(self, req: TVChannelRequest) -> TVResultResponse:
         logger.info(f"TV 채널 변경: {req.channel}")
+        # 채널 존재 여부 확인
+        channel_exists = any(channel.name == req.channel for channel in TV_CHANNELS)
+        if not channel_exists:
+            logger.warning(f"존재하지 않는 채널: {req.channel}")
+            return TVResultResponse(result="error", message=f"채널 '{req.channel}'이 존재하지 않습니다.")
+            
+        # 전원이 켜져 있는지 확인
+        if tv_state["power_state"] != "on":
+            logger.warning("TV 전원이 꺼져 있어 채널을 변경할 수 없습니다.")
+            return TVResultResponse(result="error", message="TV 전원이 꺼져 있어 채널을 변경할 수 없습니다.")
+        
+        # 상태 업데이트
+        tv_state["current_channel"] = req.channel
         return TVResultResponse(result="success", message=f"TV 채널이 {req.channel}로 변경됨")
 
     def set_volume(self, req: TVVolumeRequest) -> TVResultResponse:
         logger.info(f"TV 볼륨 조절: {req.level}")
+        # 볼륨 범위 확인
+        if not (0 <= req.level <= 100):
+            logger.warning(f"유효하지 않은 볼륨 레벨: {req.level}")
+            return TVResultResponse(result="error", message="볼륨 레벨은 0에서 100 사이여야 합니다.")
+            
+        # 전원이 켜져 있는지 확인
+        if tv_state["power_state"] != "on":
+            logger.warning("TV 전원이 꺼져 있어 볼륨을 조절할 수 없습니다.")
+            return TVResultResponse(result="error", message="TV 전원이 꺼져 있어 볼륨을 조절할 수 없습니다.")
+        
+        # 상태 업데이트
+        tv_state["volume"] = req.level
         return TVResultResponse(result="success", message=f"TV 볼륨이 {req.level}으로 변경됨")
     
     def get_channels(self) -> TVChannelsResponse:

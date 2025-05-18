@@ -2,9 +2,14 @@ from fastapi import APIRouter, HTTPException, Body
 from typing import Dict, Any
 import time
 from logging_config import setup_logger
+from pydantic import BaseModel
 
 # 로거 설정
 logger = setup_logger("microwave_api")
+
+# 요청 모델 정의
+class MicrowaveStartRequest(BaseModel):
+    seconds: int
 
 router = APIRouter(
     prefix="/api/microwave",
@@ -47,7 +52,7 @@ async def toggle_power():
     }
 
 @router.post("/start", response_model=Dict[str, Any])
-async def start_cooking(seconds: int = Body(...)):
+async def start_cooking(request: MicrowaveStartRequest):
     """
     전자레인지 조리를 시작합니다.
     
@@ -57,23 +62,23 @@ async def start_cooking(seconds: int = Body(...)):
     - 전원이 꺼져 있으면 오류가 발생합니다.
     - 조리 시간은 0보다 커야 합니다.
     """
-    logger.info(f"API 호출: 전자레인지 조리 시작 (시간: {seconds}초)")
+    logger.info(f"API 호출: 전자레인지 조리 시작 (시간: {request.seconds}초)")
     
     if not microwave_state["power"]:
         raise HTTPException(status_code=400, detail="전자레인지 전원이 꺼져 있습니다. 먼저 전원을 켜주세요.")
     
-    if seconds <= 0:
+    if request.seconds <= 0:
         raise HTTPException(status_code=400, detail="조리 시간은 0보다 커야 합니다.")
     
     microwave_state["cooking"] = True
     microwave_state["start_time"] = time.time()
-    microwave_state["duration"] = seconds
+    microwave_state["duration"] = request.seconds
     
     return {
         "result": "success",
         "cooking": True,
-        "duration": seconds,
-        "message": f"전자레인지 조리가 {seconds}초 동안 시작되었습니다."
+        "duration": request.seconds,
+        "message": f"전자레인지 조리가 {request.seconds}초 동안 시작되었습니다."
     }
 
 @router.get("/status", response_model=Dict[str, Any])

@@ -4,11 +4,29 @@ from models.light_models import (
 )
 from services.light_service import light_service
 from logging_config import setup_logger
+from typing import Dict, Any
 
 # 로거 설정
 logger = setup_logger("light_api")
 
 router = APIRouter(prefix="/light", tags=["Light"], responses={404: {"description": "Not found"}})
+
+@router.get("/status", response_model=Dict[str, Any])
+async def get_status():
+    """
+    조명 상태 조회
+    
+    - 요청 본문이 필요 없습니다.
+    - 예시 요청: GET /light/status
+    - 현재 조명의 전원 상태, 밝기, 색상, 모드 등 전반적인 상태 정보를 조회합니다.
+    - 응답에는 power(전원), brightness(밝기), color(색상), mode(모드) 정보가 포함됩니다.
+    """
+    logger.info("API 호출: 조명 상태 조회")
+    try:
+        return light_service.get_status()
+    except Exception as e:
+        logger.exception("조명 상태 조회 실패")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/power", response_model=LightResultResponse)
 async def set_power(req: LightPowerRequest):

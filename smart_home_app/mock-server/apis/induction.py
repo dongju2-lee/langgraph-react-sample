@@ -3,9 +3,14 @@ from typing import Dict, Any
 from models.induction import HeatLevel
 from services import induction_service
 from logging_config import setup_logger
+from pydantic import BaseModel
 
 # 로거 설정
 logger = setup_logger("induction_api")
+
+# 요청 모델 정의
+class InductionStartRequest(BaseModel):
+    heat_level: HeatLevel
 
 router = APIRouter(
     prefix="/api/induction",
@@ -53,18 +58,19 @@ async def toggle_power():
     }
 
 @router.post("/start-cooking", response_model=Dict[str, Any])
-async def start_cooking(heat_level: HeatLevel = Body(...)):
+async def start_cooking(request: InductionStartRequest):
     """
     인덕션 조리를 시작합니다.
     
-    - heat_level: 화력 단계 (LOW, MEDIUM, HIGH 중 하나)
+    - heat_level: 화력 단계 (HIGH, MEDIUM, LOW 중 하나)
     - 예시 요청: { "heat_level": "MEDIUM" }
     - 지정한 화력으로 인덕션 조리를 시작합니다.
     - 전원이 꺼져 있으면 오류가 발생합니다.
+    - 화력 단계 값: "HIGH" (강불), "MEDIUM" (중불), "LOW" (약불)
     """
-    logger.info(f"API 호출: 인덕션 조리 시작 (화력: {heat_level})")
+    logger.info(f"API 호출: 인덕션 조리 시작 (화력: {request.heat_level})")
     
-    result = induction_service.start_cooking(heat_level)
+    result = induction_service.start_cooking(request.heat_level)
     
     if result.result == "error":
         raise HTTPException(status_code=400, detail=result.message)

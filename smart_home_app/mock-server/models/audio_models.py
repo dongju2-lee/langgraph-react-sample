@@ -1,6 +1,9 @@
 from pydantic import BaseModel
 from typing import Optional, List
 
+class AudioPowerRequest(BaseModel):
+    power_state: str  # "on" 또는 "off"
+
 class AudioPlayRequest(BaseModel):
     playlist: Optional[str] = None
     song: Optional[str] = None

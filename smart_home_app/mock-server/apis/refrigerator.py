@@ -6,6 +6,7 @@ from models.refrigerator import (
 )
 from services import refrigerator_service
 from logging_config import setup_logger
+from typing import Dict, Any
 
 # 로거 설정
 logger = setup_logger("refrigerator_api")
@@ -15,6 +16,23 @@ router = APIRouter(
     tags=["Refrigerator"],
     responses={404: {"description": "Not found"}},
 )
+
+@router.get("/status", response_model=Dict[str, Any])
+async def get_status():
+    """
+    냉장고 전체 상태 조회
+    
+    - 요청 본문이 필요 없습니다.
+    - 예시 요청: GET /refrigerator/status
+    - 현재 냉장고의 전반적인 상태 정보(식재료 목록, 디스플레이 상태, 요리 상태 등)를 조회합니다.
+    - 응답에는 food_items_count(식재료 수), display_state(디스플레이 상태), cooking_state(요리 상태) 정보가 포함됩니다.
+    """
+    logger.info("API 호출: 냉장고 전체 상태 조회")
+    try:
+        return refrigerator_service.get_status()
+    except Exception as e:
+        logger.exception("냉장고 상태 조회 실패")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/food-items", response_model=FoodItemsResponse)
 async def get_food_items():

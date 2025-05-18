@@ -5,6 +5,13 @@ from typing import Dict, Any
 # 로거 설정
 logger = setup_logger("induction_service")
 
+# 화력 레벨 한글 표현 매핑
+HEAT_LEVEL_KOREAN = {
+    "HIGH": "강불",
+    "MEDIUM": "중불",
+    "LOW": "약불"
+}
+
 # 인덕션 상태 데이터
 induction_state = {
     "power_state": PowerState.OFF,
@@ -25,7 +32,8 @@ def get_status() -> Dict[str, Any]:
     # 상태 메시지 생성
     if induction_state["power_state"] == PowerState.ON:
         if induction_state["is_cooking"]:
-            response["message"] = f"인덕션이 {induction_state['heat_level']}로 조리 중입니다."
+            heat_level_korean = HEAT_LEVEL_KOREAN.get(induction_state['heat_level'], induction_state['heat_level'])
+            response["message"] = f"인덕션이 {heat_level_korean}로 조리 중입니다."
         else:
             response["message"] = "인덕션 전원이 켜져 있습니다."
     else:
@@ -70,10 +78,11 @@ def start_cooking(heat_level: HeatLevel):
     induction_state["is_cooking"] = True
     induction_state["heat_level"] = heat_level
     
-    logger.info(f"서비스 호출: 인덕션 조리 시작 (화력: {heat_level})")
+    heat_level_korean = HEAT_LEVEL_KOREAN.get(heat_level, heat_level)
+    logger.info(f"서비스 호출: 인덕션 조리 시작 (화력: {heat_level}, 한글: {heat_level_korean})")
     return ResultResponse(
         result="success",
-        message=f"인덕션 조리가 {heat_level}으로 시작되었습니다."
+        message=f"인덕션 조리가 {heat_level_korean}으로 시작되었습니다."
     )
 
 def stop_cooking():

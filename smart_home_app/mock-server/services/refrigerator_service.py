@@ -32,6 +32,39 @@ cooking_state = {}
 display_state = DisplayState.OFF
 display_content = ""
 
+def get_status() -> Dict[str, Any]:
+    """냉장고 전체 상태 조회"""
+    logger.info("서비스 호출: 냉장고 전체 상태 조회")
+    
+    # 카테고리별 식재료 개수 계산
+    food_categories = {}
+    for item in food_items:
+        category = getattr(item, "category", "기타")
+        if category not in food_categories:
+            food_categories[category] = 0
+        food_categories[category] += 1
+    
+    return {
+        "food_items_count": len(food_items),
+        "food_categories": food_categories,
+        "display_state": display_state,
+        "display_content": display_content if display_state == DisplayState.ON else None,
+        "cooking_state": cooking_state if cooking_state else None,
+        "is_door_open": False,  # 기본값
+        "temperature": {
+            "freezer": -18,  # 기본값 (섭씨)
+            "fridge": 3      # 기본값 (섭씨)
+        },
+        "message": (
+            f"냉장고에는 현재 {len(food_items)}개의 식재료가 있습니다. " +
+            (f"디스플레이는 {display_state} 상태이며, " +
+             (f"'{display_content}'를 표시 중입니다." if display_state == DisplayState.ON and display_content else
+              "내용이 없습니다." if display_state == DisplayState.ON else
+              "꺼져 있습니다.")
+            )
+        )
+    }
+
 def get_food_items():
     """냉장고에 있는 식재료 리스트 조회"""
     logger.info("서비스 호출: 냉장고에 있는 식재료 리스트 조회")

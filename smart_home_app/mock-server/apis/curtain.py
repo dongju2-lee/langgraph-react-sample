@@ -4,11 +4,29 @@ from models.curtain_models import (
 )
 from services.curtain_service import curtain_service
 from logging_config import setup_logger
+from typing import Dict, Any
 
 # 로거 설정
 logger = setup_logger("curtain_api")
 
 router = APIRouter(prefix="/curtain", tags=["Curtain"], responses={404: {"description": "Not found"}})
+
+@router.get("/status", response_model=Dict[str, Any])
+async def get_status():
+    """
+    커튼 상태 조회
+    
+    - 요청 본문이 필요 없습니다.
+    - 예시 요청: GET /curtain/status
+    - 현재 커튼의 열림/닫힘 상태, 열림 비율, 스케줄 등 전반적인 상태 정보를 조회합니다.
+    - 응답에는 power_state(열림/닫힘), position(열림 비율), schedules(예약된 스케줄 목록) 정보가 포함됩니다.
+    """
+    logger.info("API 호출: 커튼 상태 조회")
+    try:
+        return curtain_service.get_status()
+    except Exception as e:
+        logger.exception("커튼 상태 조회 실패")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/power", response_model=CurtainResultResponse)
 async def set_power(req: CurtainPowerRequest):

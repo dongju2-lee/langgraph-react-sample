@@ -1,15 +1,50 @@
 from fastapi import APIRouter, HTTPException
 from models.audio_models import (
     AudioPlayRequest, AudioVolumeRequest, AudioPlaylistRequest, AudioResultResponse,
-    AudioPlaylistsResponse, AudioPlaylistSongsResponse
+    AudioPlaylistsResponse, AudioPlaylistSongsResponse, AudioPowerRequest
 )
 from services.audio_service import audio_service
 from logging_config import setup_logger
+from typing import Dict, Any
 
 # 로거 설정
 logger = setup_logger("audio_api")
 
 router = APIRouter(prefix="/audio", tags=["Audio"], responses={404: {"description": "Not found"}})
+
+@router.get("/status", response_model=Dict[str, Any])
+async def get_status():
+    """
+    오디오 상태 조회
+    
+    - 요청 본문이 필요 없습니다.
+    - 예시 요청: GET /audio/status
+    - 현재 오디오의 재생 상태, 선택된 플레이리스트, 재생 중인 곡, 볼륨 등 전반적인 상태 정보를 조회합니다.
+    - 응답에는 playing(재생 여부), current_song(현재 곡), volume(볼륨), current_playlist(현재 플레이리스트) 정보가 포함됩니다.
+    """
+    logger.info("API 호출: 오디오 상태 조회")
+    try:
+        return audio_service.get_status()
+    except Exception as e:
+        logger.exception("오디오 상태 조회 실패")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/power", response_model=AudioResultResponse)
+async def set_power(req: AudioPowerRequest):
+    """
+    오디오 전원 켜기/끄기
+    
+    - power_state: "on" 또는 "off" (문자열)
+    - 예시: { "power_state": "on" }
+    - 오디오 시스템의 전원을 켜거나 끕니다.
+    - 전원이 꺼지면 현재 재생 중인 음악도 자동으로 중지됩니다.
+    """
+    logger.info(f"API 호출: 오디오 전원 {req.power_state}")
+    try:
+        return audio_service.set_power(req)
+    except Exception as e:
+        logger.exception("오디오 전원 제어 실패")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/play", response_model=AudioResultResponse)
 async def play_audio(req: AudioPlayRequest):

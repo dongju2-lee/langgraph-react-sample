@@ -7,9 +7,9 @@ class PowerState(str, Enum):
     OFF = "off"
 
 class HeatLevel(str, Enum):
-    HIGH = "강불"
-    MEDIUM = "중불"
-    LOW = "약불"
+    HIGH = "HIGH"
+    MEDIUM = "MEDIUM"
+    LOW = "LOW"
 
 class InductionState(BaseModel):
     """인덕션 상태 모델"""

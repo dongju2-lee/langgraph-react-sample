@@ -5,11 +5,29 @@ from models.tv_models import (
 )
 from services.tv_service import tv_service
 from logging_config import setup_logger
+from typing import Dict, Any
 
 # 로거 설정
 logger = setup_logger("tv_api")
 
 router = APIRouter(prefix="/tv", tags=["TV"], responses={404: {"description": "Not found"}})
+
+@router.get("/status", response_model=Dict[str, Any])
+async def get_status():
+    """
+    TV 상태 조회
+    
+    - 요청 본문이 필요 없습니다.
+    - 예시 요청: GET /tv/status
+    - 현재 TV의 전원 상태, 채널, 볼륨 등 전반적인 상태 정보를 조회합니다.
+    - 응답에는 power(전원), current_channel(현재 채널), volume(볼륨) 정보가 포함됩니다.
+    """
+    logger.info("API 호출: TV 상태 조회")
+    try:
+        return tv_service.get_status()
+    except Exception as e:
+        logger.exception("TV 상태 조회 실패")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/power", response_model=TVResultResponse)
 async def set_power(req: TVPowerRequest):
