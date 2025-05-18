@@ -1,28 +1,19 @@
-2025-05-16 01:28:35,988 - api_router - INFO - Initializing API routers
-2025-05-16 01:28:35,989 - api_router - INFO - Refrigerator router initialized
-2025-05-16 01:28:35,992 - api_router - INFO - Microwave router initialized
-2025-05-16 01:28:35,992 - api_router - INFO - Induction router initialized
-2025-05-16 01:28:35,993 - api_router - INFO - Personalization router initialized
-2025-05-16 01:28:35,994 - api_router - INFO - Cooking router initialized
-2025-05-16 01:28:35,995 - api_router - INFO - Mobile router initialized
-2025-05-16 01:28:36,022 - smart_home_api - INFO - Starting Smart Home API server
-2025-05-16 01:28:36,237 - api_router - INFO - Initializing API routers
-2025-05-16 01:28:36,238 - api_router - INFO - Refrigerator router initialized
-2025-05-16 01:28:36,238 - api_router - INFO - Microwave router initialized
-2025-05-16 01:28:36,239 - api_router - INFO - Induction router initialized
-2025-05-16 01:28:36,240 - api_router - INFO - Personalization router initialized
-2025-05-16 01:28:36,240 - api_router - INFO - Cooking router initialized
-2025-05-16 01:28:36,241 - api_router - INFO - Mobile router initialized
-2025-05-16 01:28:36,276 - smart_home_api - INFO - Smart Home API server is starting up
-2025-05-16 01:28:41,311 - smart_home_api - INFO - Request 1747326521.3117929 - Method: GET Path: /docs - Client: 127.0.0.1
-2025-05-16 01:28:41,312 - smart_home_api - INFO - Response 1747326521.3117929 - Status: 200 - Took: 0.0007s
-2025-05-16 01:28:41,415 - smart_home_api - INFO - Request 1747326521.414987 - Method: GET Path: /openapi.json - Client: 127.0.0.1
-2025-05-16 01:28:41,468 - smart_home_api - INFO - Response 1747326521.414987 - Status: 200 - Took: 0.0529s
-2025-05-16 01:28:50,989 - smart_home_api - INFO - Request 1747326530.9895492 - Method: GET Path: /refrigerator/food-items - Client: 127.0.0.1
-2025-05-16 01:28:50,990 - refrigerator_api - INFO - API 호출: 냉장고에 있는 식재료 리스트 조회
-2025-05-16 01:28:50,990 - refrigerator_service - INFO - 서비스 호출: 냉장고에 있는 식재료 리스트 조회
-2025-05-16 01:28:50,990 - smart_home_api - INFO - Response 1747326530.9895492 - Status: 200 - Took: 0.0010s
-2025-05-16 01:28:51,716 - smart_home_api - INFO - Request 1747326531.716318 - Method: GET Path: /refrigerator/food-items - Client: 127.0.0.1
-2025-05-16 01:28:51,716 - refrigerator_api - INFO - API 호출: 냉장고에 있는 식재료 리스트 조회
-2025-05-16 01:28:51,716 - refrigerator_service - INFO - 서비스 호출: 냉장고에 있는 식재료 리스트 조회
-2025-05-16 01:28:51,716 - smart_home_api - INFO - Response 1747326531.716318 - Status: 200 - Took: 0.0004s
+2025-05-17 10:20:32,201 - smart_home_api - INFO - Request 1747444832.199778 - Method: GET Path: /refrigerator/cooking-state - Client: 127.0.0.1
+2025-05-17 10:20:32,215 - smart_home_api - INFO - Response 1747444832.199778 - Status: 200 - Took: 0.0100s
+2025-05-17 10:20:32,220 - smart_home_api - INFO - Request 1747444832.220923 - Method: GET Path: /induction/power/state - Client: 127.0.0.1
+2025-05-17 10:20:32,223 - smart_home_api - INFO - Response 1747444832.220923 - Status: 404 - Took: 0.0014s
+2025-05-17 10:20:32,230 - smart_home_api - INFO - Request 1747444832.230133 - Method: GET Path: /microwave/power/state - Client: 127.0.0.1
+2025-05-17 10:20:32,230 - smart_home_api - INFO - Response 1747444832.230133 - Status: 404 - Took: 0.0002s
+2025-05-17 10:20:32,231 - smart_home_api - INFO - Request 1747444832.231818 - Method: GET Path: /microwave/mode - Client: 127.0.0.1
+2025-05-17 10:20:32,232 - smart_home_api - INFO - Response 1747444832.231818 - Status: 404 - Took: 0.0002s
+2025-05-17 10:20:34,392 - smart_home_api - INFO - Request 1747444834.391992 - Method: GET Path: /user/message - Client: 127.0.0.1
+2025-05-17 10:20:34,392 - smart_home_api - INFO - Response 1747444834.391992 - Status: 404 - Took: 0.0004s
+2025-05-17 10:20:37,434 - smart_home_api - INFO - Request 1747444837.434421 - Method: GET Path: /refrigerator/cooking-state - Client: 127.0.0.1
+2025-05-17 10:20:37,435 - smart_home_api - INFO - Response 1747444837.434421 - Status: 200 - Took: 0.0009s
+2025-05-17 10:20:37,440 - smart_home_api - INFO - Request 1747444837.4404411 - Method: GET Path: /induction/power/state - Client: 127.0.0.1
+2025-05-17 10:20:37,440 - smart_home_api - INFO - Response 1747444837.4404411 - Status: 404 - Took: 0.0002s
+2025-05-17 10:20:37,443 - smart_home_api - INFO - Request 1747444837.443014 - Method: GET Path: /microwave/power/state - Client: 127.0.0.1
+2025-05-17 10:20:37,443 - smart_home_api - INFO - Response 1747444837.443014 - Status: 404 - Took: 0.0004s
+2025-05-17 10:20:37,445 - smart_home_api - INFO - Request 1747444837.445606 - Method: GET Path: /microwave/mode - Client: 127.0.0.1
+2025-05-17 10:20:37,446 - smart_home_api - INFO - Response 1747444837.445606 - Status: 404 - Took: 0.0004s
+2025-05-17 10:20:54,565 - smart_home_api - INFO - Smart Home API server is shutting down

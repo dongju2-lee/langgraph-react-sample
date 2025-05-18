@@ -22,7 +22,14 @@ microwave_state = {
 
 @router.post("/power", response_model=Dict[str, Any])
 async def toggle_power():
-    """전자레인지 전원을 켜거나 끕니다."""
+    """
+    전자레인지 전원을 켜거나 끕니다.
+    
+    - 요청 본문이 필요 없습니다.
+    - 예시 요청: {}
+    - 현재 전원 상태가 꺼져 있으면 켜고, 켜져 있으면 끕니다.
+    - 전원이 꺼지면 조리도 자동으로 중단됩니다.
+    """
     logger.info("API 호출: 전자레인지 전원 토글")
     
     microwave_state["power"] = not microwave_state["power"]
@@ -41,7 +48,15 @@ async def toggle_power():
 
 @router.post("/start", response_model=Dict[str, Any])
 async def start_cooking(seconds: int = Body(...)):
-    """전자레인지 조리를 시작합니다."""
+    """
+    전자레인지 조리를 시작합니다.
+    
+    - seconds: 조리 시간 (초 단위, 1 이상의 정수)
+    - 예시 요청: { "seconds": 60 }
+    - 지정한 시간(초) 동안 전자레인지 조리를 시작합니다.
+    - 전원이 꺼져 있으면 오류가 발생합니다.
+    - 조리 시간은 0보다 커야 합니다.
+    """
     logger.info(f"API 호출: 전자레인지 조리 시작 (시간: {seconds}초)")
     
     if not microwave_state["power"]:
@@ -63,7 +78,14 @@ async def start_cooking(seconds: int = Body(...)):
 
 @router.get("/status", response_model=Dict[str, Any])
 async def get_status():
-    """전자레인지 조리 상태를 조회합니다."""
+    """
+    전자레인지 조리 상태를 조회합니다.
+    
+    - 요청 본문이 필요 없습니다.
+    - 예시 요청: GET /api/microwave/status
+    - 현재 전자레인지의 전원 상태, 조리 중 여부를 조회합니다.
+    - 조리 중인 경우 남은 시간(초)도 함께 반환합니다.
+    """
     logger.info("API 호출: 전자레인지 조리 상태 조회")
     
     response = {
@@ -98,7 +120,14 @@ async def get_status():
 
 @router.post("/stop", response_model=Dict[str, Any])
 async def stop_cooking():
-    """전자레인지 조리를 중단합니다."""
+    """
+    전자레인지 조리를 중단합니다.
+    
+    - 요청 본문이 필요 없습니다.
+    - 예시 요청: {}
+    - 현재 진행 중인 조리를 중단합니다.
+    - 이미 조리 중이 아닌 경우에도 요청은 성공하지만 결과는 "info"입니다.
+    """
     logger.info("API 호출: 전자레인지 조리 중단")
     
     if not microwave_state["cooking"]:

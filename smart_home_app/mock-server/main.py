@@ -77,4 +77,4 @@ async def shutdown_event():
 
 if __name__ == "__main__":
     logger.info("Starting Smart Home API server")
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=10000, reload=True)

@@ -22,13 +22,26 @@ induction_state = {
 
 @router.get("/status", response_model=Dict[str, Any])
 async def get_status():
-    """인덕션 상태를 조회합니다."""
+    """
+    인덕션 상태를 조회합니다.
+    
+    - 요청 본문이 필요 없습니다.
+    - 예시 요청: GET /api/induction/status
+    - 현재 인덕션의 전원 상태, 조리 중 여부, 화력 단계를 조회합니다.
+    """
     logger.info("API 호출: 인덕션 상태 조회")
     return induction_service.get_status()
 
 @router.post("/power", response_model=Dict[str, Any])
 async def toggle_power():
-    """인덕션 전원을 켜거나 끕니다."""
+    """
+    인덕션 전원을 켜거나 끕니다.
+    
+    - 요청 본문이 필요 없습니다.
+    - 예시 요청: {}
+    - 현재 전원 상태가 꺼져 있으면 켜고, 켜져 있으면 끕니다.
+    - 전원이 꺼지면 조리도 자동으로 중단됩니다.
+    """
     logger.info("API 호출: 인덕션 전원 토글")
     
     result = induction_service.toggle_power()
@@ -41,7 +54,14 @@ async def toggle_power():
 
 @router.post("/start-cooking", response_model=Dict[str, Any])
 async def start_cooking(heat_level: HeatLevel = Body(...)):
-    """인덕션 조리를 시작합니다."""
+    """
+    인덕션 조리를 시작합니다.
+    
+    - heat_level: 화력 단계 (LOW, MEDIUM, HIGH 중 하나)
+    - 예시 요청: { "heat_level": "MEDIUM" }
+    - 지정한 화력으로 인덕션 조리를 시작합니다.
+    - 전원이 꺼져 있으면 오류가 발생합니다.
+    """
     logger.info(f"API 호출: 인덕션 조리 시작 (화력: {heat_level})")
     
     result = induction_service.start_cooking(heat_level)
@@ -60,7 +80,14 @@ async def start_cooking(heat_level: HeatLevel = Body(...)):
 
 @router.post("/stop-cooking", response_model=Dict[str, Any])
 async def stop_cooking():
-    """인덕션 조리를 중단합니다."""
+    """
+    인덕션 조리를 중단합니다.
+    
+    - 요청 본문이 필요 없습니다.
+    - 예시 요청: {}
+    - 현재 진행 중인 조리를 중단합니다.
+    - 이미 조리 중이 아닌 경우에도 요청은 처리됩니다.
+    """
     logger.info("API 호출: 인덕션 조리 중단")
     
     result = induction_service.stop_cooking()

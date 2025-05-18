@@ -111,7 +111,15 @@ ingredient_to_food_map = {
 
 @router.post("/recommend", response_model=FoodRecommendation)
 async def recommend_food(ingredients: List[str] = Body(...)):
-    """식재료를 기반으로 요리를 추천합니다."""
+    """
+    식재료를 기반으로 요리를 추천합니다.
+    
+    - ingredients: 요리에 사용할 식재료 목록 (문자열 배열)
+    - 지원하는 식재료: "소고기", "고구마", "오징어", "생닭", "양파", "치즈" 등
+    - 예시: ["소고기", "양파"]
+    - 입력한 식재료를 기반으로 적합한 요리를 추천합니다.
+    - 적합한 요리가 없을 경우 기본 요리를 추천합니다.
+    """
     logger.info(f"API 호출: 식재료 기반 요리 추천 - 재료: {ingredients}")
     
     potential_foods = set()
@@ -136,7 +144,15 @@ async def recommend_food(ingredients: List[str] = Body(...)):
 
 @router.get("/recipe/{food_name}", response_model=Recipe)
 async def get_recipe(food_name: str):
-    """음식 이름을 기반으로 레시피를 반환합니다."""
+    """
+    음식 이름을 기반으로 레시피를 반환합니다.
+    
+    - food_name: 조회할 음식 이름 (예: "라자냐", "고구마튀김", "오징어볶음")
+    - 예시 요청: GET /api/cooking/recipe/라자냐
+    - 지원하는 음식: "라자냐", "고구마튀김", "오징어볶음", "소고기 볶음밥", "닭볶음탕"
+    - 지정한 음식의 재료, 조리 단계, 필요한 가전기기 등 상세 레시피를 반환합니다.
+    - 레시피가 없는 경우 404 오류가 발생합니다.
+    """
     logger.info(f"API 호출: 레시피 조회 - 음식: {food_name}")
     
     if food_name not in recipes:
