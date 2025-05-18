@@ -15,16 +15,16 @@ cd "$SCRIPT_DIR"
 
 # 서버 목록과 포트 설정
 SERVERS=(
-    "refrigerator_mcp.py:8001"
-    "induction_mcp.py:8002"
-    "microwave_mcp.py:8003"
-    "mobile_mcp.py:8004"
-    "cooking_mcp.py:8005"
-    "personalization_mcp.py:8006"
-    "tv_mcp.py:10006"
-    "audio_mcp.py:10007"
-    "light_mcp.py:10008"
-    "curtain_mcp.py:10009"
+    "refrigerator_mcp.py:10001"
+    "induction_mcp.py:10002"
+    "microwave_mcp.py:10003"
+    "mobile_mcp.py:10004"
+    "cooking_mcp.py:10005"
+    "personalization_mcp.py:10006"
+    "tv_mcp.py:10007"
+    "audio_mcp.py:10008"
+    "light_mcp.py:10009"
+    "curtain_mcp.py:10010"
 )
 
 # 이미 실행 중인 프로세스 확인 및 종료
