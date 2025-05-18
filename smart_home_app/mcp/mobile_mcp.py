@@ -9,7 +9,11 @@ from mcp.server.fastmcp import FastMCP
 
 # 환경 변수 로드
 load_dotenv()
-MOCK_SERVER_URL = os.environ.get("MOCK_SERVER_URL", "http://localhost:8000")
+MOCK_SERVER_URL = os.environ.get("MOCK_SERVER_URL", "http://localhost:10000")
+MOBILE_MCP_NAME = os.environ.get("MOBILE_MCP_NAME", "mobile")
+MOBILE_MCP_HOST = os.environ.get("MOBILE_MCP_HOST", "0.0.0.0")
+MOBILE_MCP_PORT = int(os.environ.get("MOBILE_MCP_PORT", 10004))
+MOBILE_MCP_INSTRUCTIONS = os.environ.get("MOBILE_MCP_INSTRUCTIONS", "모바일 기능을 제어하는 도구입니다. 메시지 조회/전송/삭제, 캘린더 일정 조회/추가/삭제 등의 기능을 제공합니다.")
 
 # 로깅 설정
 logging.basicConfig(
@@ -20,10 +24,10 @@ logger = logging.getLogger("mobile_mcp_server")
 
 # FastMCP 인스턴스 생성
 mcp = FastMCP(
-    "mobile",  # MCP 서버 이름
-    instructions="모바일 기능을 제어하는 도구입니다. 메시지 조회/전송/삭제, 캘린더 일정 조회/추가/삭제 등의 기능을 제공합니다.",
-    host="0.0.0.0",  # 모든 IP에서 접속 허용
-    port=8004,  # 포트 번호
+    MOBILE_MCP_NAME,  # MCP 서버 이름
+    instructions=MOBILE_MCP_INSTRUCTIONS,
+    host=MOBILE_MCP_HOST,  # 모든 IP에서 접속 허용
+    port=MOBILE_MCP_PORT,  # 포트 번호
 )
 
 # 모의 API 요청 함수

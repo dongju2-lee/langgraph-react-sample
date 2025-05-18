@@ -21,6 +21,10 @@ SERVERS=(
     "mobile_mcp.py:8004"
     "cooking_mcp.py:8005"
     "personalization_mcp.py:8006"
+    "tv_mcp.py:10006"
+    "audio_mcp.py:10007"
+    "light_mcp.py:10008"
+    "curtain_mcp.py:10009"
 )
 
 # 이미 실행 중인 프로세스 확인 및 종료

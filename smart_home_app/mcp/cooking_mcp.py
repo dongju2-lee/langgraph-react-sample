@@ -8,7 +8,11 @@ from dotenv import load_dotenv
 
 # 환경 변수 로드
 load_dotenv()
-MOCK_SERVER_URL = os.environ.get("MOCK_SERVER_URL", "http://localhost:8000")
+MOCK_SERVER_URL = os.environ.get("MOCK_SERVER_URL", "http://localhost:10000")
+COOKING_MCP_NAME = os.environ.get("COOKING_MCP_NAME", "cooking")
+COOKING_MCP_HOST = os.environ.get("COOKING_MCP_HOST", "0.0.0.0")
+COOKING_MCP_PORT = int(os.environ.get("COOKING_MCP_PORT", 10005))
+COOKING_MCP_INSTRUCTIONS = os.environ.get("COOKING_MCP_INSTRUCTIONS", "요리 관련 기능을 제어하는 도구입니다. 식재료 기반 요리 추천, 레시피 조회, 요리 시작 등의 기능을 제공합니다.")
 
 # 로깅 설정
 logging.basicConfig(
@@ -19,10 +23,10 @@ logger = logging.getLogger("cooking_mcp_server")
 
 # FastMCP 인스턴스 생성
 mcp = FastMCP(
-    "cooking",  # MCP 서버 이름
-    instructions="요리 관련 기능을 제어하는 도구입니다. 식재료 기반 요리 추천, 레시피 조회, 요리 시작 등의 기능을 제공합니다.",
-    host="0.0.0.0",  # 모든 IP에서 접속 허용
-    port=8005,  # 포트 번호
+    COOKING_MCP_NAME,  # MCP 서버 이름
+    instructions=COOKING_MCP_INSTRUCTIONS,
+    host=COOKING_MCP_HOST,  # 모든 IP에서 접속 허용
+    port=COOKING_MCP_PORT,  # 포트 번호
 )
 
 # 모의 API 요청 함수

@@ -8,7 +8,11 @@ from dotenv import load_dotenv
 
 # 환경 변수 로드
 load_dotenv()
-MOCK_SERVER_URL = os.environ.get("MOCK_SERVER_URL", "http://localhost:8000")
+MOCK_SERVER_URL = os.environ.get("MOCK_SERVER_URL", "http://localhost:10000")
+MICROWAVE_MCP_NAME = os.environ.get("MICROWAVE_MCP_NAME", "microwave")
+MICROWAVE_MCP_HOST = os.environ.get("MICROWAVE_MCP_HOST", "0.0.0.0")
+MICROWAVE_MCP_PORT = int(os.environ.get("MICROWAVE_MCP_PORT", 10003))
+MICROWAVE_MCP_INSTRUCTIONS = os.environ.get("MICROWAVE_MCP_INSTRUCTIONS", "전자레인지를 제어하는 도구입니다. 전원 상태 확인, 전원 상태 변경, 조리 시작, 남은 시간 확인 등의 기능을 제공합니다.")
 
 # 로깅 설정
 logging.basicConfig(
@@ -19,10 +23,10 @@ logger = logging.getLogger("microwave_mcp_server")
 
 # FastMCP 인스턴스 생성
 mcp = FastMCP(
-    "microwave",  # MCP 서버 이름
-    instructions="전자레인지를 제어하는 도구입니다. 전원 상태 확인, 전원 상태 변경, 조리 시작, 남은 시간 확인 등의 기능을 제공합니다.",
-    host="0.0.0.0",  # 모든 IP에서 접속 허용
-    port=8003,  # 포트 번호
+    MICROWAVE_MCP_NAME,  # MCP 서버 이름
+    instructions=MICROWAVE_MCP_INSTRUCTIONS,
+    host=MICROWAVE_MCP_HOST,  # 모든 IP에서 접속 허용
+    port=MICROWAVE_MCP_PORT,  # 포트 번호
 )
 
 # 모의 API 요청 함수
@@ -48,7 +52,7 @@ async def mock_api_request(path: str, method: str = "GET", data: Optional[Dict] 
         return {"error": f"모의 서버 요청 실패: {str(e)}"}
 
 @mcp.tool()
-async def get_status() -> Dict[str, Any]:
+async def get_microwave_status() -> Dict[str, Any]:
     """
     전자레인지 상태를 조회합니다.
     전원 상태(켜짐/꺼짐), 조리 여부, 남은 시간 등의 정보를 반환합니다.
@@ -61,7 +65,7 @@ async def get_status() -> Dict[str, Any]:
     return result
 
 @mcp.tool()
-async def toggle_power() -> Dict[str, Any]:
+async def toggle_microwave_power() -> Dict[str, Any]:
     """
     전자레인지 전원을 켜거나 끕니다.
     현재 전원 상태를 반대로 변경합니다. (켜져 있으면 끄고, 꺼져 있으면 켭니다)
@@ -74,7 +78,7 @@ async def toggle_power() -> Dict[str, Any]:
     return result
 
 @mcp.tool()
-async def start_cooking(seconds: int) -> Dict[str, Any]:
+async def start_microwave_cooking(seconds: int) -> Dict[str, Any]:
     """
     전자레인지 조리를 시작합니다.
     
@@ -94,7 +98,7 @@ async def start_cooking(seconds: int) -> Dict[str, Any]:
     return result
 
 @mcp.tool()
-async def stop_cooking() -> Dict[str, Any]:
+async def stop_microwave_cooking() -> Dict[str, Any]:
     """
     전자레인지 조리를 중단합니다.
     
@@ -106,7 +110,7 @@ async def stop_cooking() -> Dict[str, Any]:
     return result
 
 @mcp.tool()
-async def get_remaining_time() -> Dict[str, Any]:
+async def get_microwave_remaining_time() -> Dict[str, Any]:
     """
     전자레인지 조리 남은 시간을 조회합니다.
     

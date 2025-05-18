@@ -8,7 +8,11 @@ from dotenv import load_dotenv
 
 # 환경 변수 로드
 load_dotenv()
-MOCK_SERVER_URL = os.environ.get("MOCK_SERVER_URL", "http://localhost:8000")
+MOCK_SERVER_URL = os.environ.get("MOCK_SERVER_URL", "http://localhost:10000")
+REFRIGERATOR_MCP_NAME = os.environ.get("REFRIGERATOR_MCP_NAME", "refrigerator")
+REFRIGERATOR_MCP_HOST = os.environ.get("REFRIGERATOR_MCP_HOST", "0.0.0.0")
+REFRIGERATOR_MCP_PORT = int(os.environ.get("REFRIGERATOR_MCP_PORT", 10001))
+REFRIGERATOR_MCP_INSTRUCTIONS = os.environ.get("REFRIGERATOR_MCP_INSTRUCTIONS", "냉장고를 제어하는 도구입니다. 식재료 조회/추가, 디스플레이 상태/내용 설정 등의 기능을 제공합니다.")
 
 # 로깅 설정
 logging.basicConfig(
@@ -19,10 +23,10 @@ logger = logging.getLogger("refrigerator_mcp_server")
 
 # FastMCP 인스턴스 생성
 mcp = FastMCP(
-    "refrigerator",  # MCP 서버 이름
-    instructions="냉장고를 제어하는 도구입니다. 식재료 조회/추가, 디스플레이 상태/내용 설정 등의 기능을 제공합니다.",
-    host="0.0.0.0",  # 모든 IP에서 접속 허용
-    port=8001,  # 포트 번호
+    REFRIGERATOR_MCP_NAME,  # MCP 서버 이름
+    instructions=REFRIGERATOR_MCP_INSTRUCTIONS,
+    host=REFRIGERATOR_MCP_HOST,  # 모든 IP에서 접속 허용
+    port=REFRIGERATOR_MCP_PORT,  # 포트 번호
 )
 
 # 모의 API 요청 함수
@@ -118,6 +122,18 @@ async def set_display_content(content: str) -> Dict[str, Any]:
     """
     logger.info(f"냉장고 디스플레이 내용 설정 요청 수신: {content[:20]}...")
     result = await mock_api_request("/refrigerator/display-content", "POST", {"content": content})
+    return result
+
+@mcp.tool()
+async def get_display_content() -> Dict[str, Any]:
+    """
+    냉장고 디스플레이 내용을 조회합니다
+    
+    Returns:
+        Dict[str, Any]: 내용 결과
+    """
+    logger.info(f"냉장고 디스플레이 내용 조회")
+    result = await mock_api_request("/refrigerator/display-content", "GET")
     return result
 
 @mcp.tool()

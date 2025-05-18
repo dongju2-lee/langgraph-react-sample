@@ -8,7 +8,11 @@ from dotenv import load_dotenv
 
 # 환경 변수 로드
 load_dotenv()
-MOCK_SERVER_URL = os.environ.get("MOCK_SERVER_URL", "http://localhost:8000")
+MOCK_SERVER_URL = os.environ.get("MOCK_SERVER_URL", "http://localhost:10000")
+PERSONALIZATION_MCP_NAME = os.environ.get("PERSONALIZATION_MCP_NAME", "personalization")
+PERSONALIZATION_MCP_HOST = os.environ.get("PERSONALIZATION_MCP_HOST", "0.0.0.0")
+PERSONALIZATION_MCP_PORT = int(os.environ.get("PERSONALIZATION_MCP_PORT", 10006))
+PERSONALIZATION_MCP_INSTRUCTIONS = os.environ.get("PERSONALIZATION_MCP_INSTRUCTIONS", "사용자 선호도 관리 기능을 제어하는 도구입니다. 선호도 조회/추가/삭제, 가전기기 목록 조회 등의 기능을 제공합니다.")
 
 # 로깅 설정
 logging.basicConfig(
@@ -19,10 +23,10 @@ logger = logging.getLogger("personalization_mcp_server")
 
 # FastMCP 인스턴스 생성
 mcp = FastMCP(
-    "personalization",  # MCP 서버 이름
-    instructions="사용자 선호도 관리 기능을 제어하는 도구입니다. 선호도 조회/추가/삭제, 가전기기 목록 조회 등의 기능을 제공합니다.",
-    host="0.0.0.0",  # 모든 IP에서 접속 허용
-    port=8006,  # 포트 번호
+    PERSONALIZATION_MCP_NAME,  # MCP 서버 이름
+    instructions=PERSONALIZATION_MCP_INSTRUCTIONS,
+    host=PERSONALIZATION_MCP_HOST,  # 모든 IP에서 접속 허용
+    port=PERSONALIZATION_MCP_PORT,  # 포트 번호
 )
 
 # 모의 API 요청 함수
