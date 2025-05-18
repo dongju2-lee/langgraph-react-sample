@@ -1,0 +1,24 @@
+2025-05-19 00:12:44,746 - api_router - INFO - Initializing API routers
+2025-05-19 00:12:44,747 - api_router - INFO - Refrigerator router initialized
+2025-05-19 00:12:44,748 - api_router - INFO - Microwave router initialized
+2025-05-19 00:12:44,748 - api_router - INFO - Induction router initialized
+2025-05-19 00:12:44,749 - api_router - INFO - Personalization router initialized
+2025-05-19 00:12:44,749 - api_router - INFO - Cooking router initialized
+2025-05-19 00:12:44,750 - api_router - INFO - Mobile router initialized
+2025-05-19 00:12:44,751 - api_router - INFO - TV router initialized
+2025-05-19 00:12:44,752 - api_router - INFO - Light router initialized
+2025-05-19 00:12:44,753 - api_router - INFO - Curtain router initialized
+2025-05-19 00:12:44,754 - api_router - INFO - Audio router initialized
+2025-05-19 00:12:44,785 - smart_home_api - INFO - Starting Smart Home API server
+2025-05-19 00:12:44,969 - api_router - INFO - Initializing API routers
+2025-05-19 00:12:44,970 - api_router - INFO - Refrigerator router initialized
+2025-05-19 00:12:44,971 - api_router - INFO - Microwave router initialized
+2025-05-19 00:12:44,971 - api_router - INFO - Induction router initialized
+2025-05-19 00:12:44,972 - api_router - INFO - Personalization router initialized
+2025-05-19 00:12:44,972 - api_router - INFO - Cooking router initialized
+2025-05-19 00:12:44,973 - api_router - INFO - Mobile router initialized
+2025-05-19 00:12:44,974 - api_router - INFO - TV router initialized
+2025-05-19 00:12:44,975 - api_router - INFO - Light router initialized
+2025-05-19 00:12:44,976 - api_router - INFO - Curtain router initialized
+2025-05-19 00:12:44,978 - api_router - INFO - Audio router initialized
+2025-05-19 00:12:45,021 - smart_home_api - INFO - Smart Home API server is starting up
