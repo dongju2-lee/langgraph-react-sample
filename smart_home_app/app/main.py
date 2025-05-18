@@ -7,7 +7,7 @@ from langfuse.callback import CallbackHandler
 
 langfuse_handler = CallbackHandler(
     public_key="",
-    secret_key="",
+    secret_key="s",
     host=""
 )
 
